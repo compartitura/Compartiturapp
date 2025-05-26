@@ -1,46 +1,104 @@
 import fs from 'fs';
 import path from 'path';
-import Head from 'next/head';
-import axios from 'axios';
-import cheerio from 'cheerio';
-
-const USER_AGENT = 'Mozilla/5.0 (compatible; Bot/1.0)';
-
-async function fetchDescription(url) { /*…*/ }
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export async function getServerSideProps({ params }) {
-  const products = JSON.parse(fs.readFileSync(path.join(process.cwd(),'data','products.json'),'utf-8'));
-  const slugArr = Array.isArray(params.slug)?params.slug:[params.slug];
-  const last = slugArr[slugArr.length-1];
-  let product = products.find(p=>String(p.ArticleNumber)===last);
-  if(!product) {
-    const decoded=decodeURIComponent(last).toLowerCase().replace(/-/g,' ');
-    product=products.find(p=>p.Model.toLowerCase()===decoded);
+  const slug = params.slug?.[0] || '';
+  const all = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), 'data/versions/products.json'), 'utf-8')
+  );
+
+  const product = all.find(p => String(p.ArticleNumber) === slug);
+
+  if (!product) {
+    return { notFound: true };
   }
-  if(!product) return { notFound:true };
-  if(!product.Description?.trim()){
-    const cleanUrl=(product.ProductURL||product.affiliateURL||'').trim().replace(/\s.*$/,'');
-    try{ product.Description=await fetchDescription(cleanUrl); }catch{}
-  }
-  return { props:{ product } };
+
+  return {
+    props: { product }
+  };
+}
+
+function getVideoURL(videoId) {
+  return `https://www.youtube.com/embed/${videoId}`;
 }
 
 export default function ProductPage({ product }) {
-  const title = `${product.Brand} ${product.Model}`;
-  return (
-    <>
-      <Head><title>{title}</title><meta name="description" content={product.Description||''}/></Head>
-      <div className="max-w-2xl mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">{title}</h1>
-        <img src={product.ImageURL} alt={product.Model} className="w-full h-64 object-cover rounded mb-4"/>
-        {product.Description
-          ? <p className="mb-6 whitespace-pre-wrap">{product.Description}</p>
-          : <p className="italic text-gray-500 mb-6">(sin descripción disponible)</p>
+  const { Brand, Model, Description, ImageURL, affiliateURL } = product;
+  const [videoId, setVideoId] = useState(null);
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const clean = (text) =>
+          text
+            .toLowerCase()
+            .replace(/["'`]/g, '')
+            .replace(/[-_]/g, ' ')
+            .replace(/[^\w\s]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        const brandClean = clean(Brand);
+        const modelClean = clean(Model);
+        const res = await fetch(`/api/video?brand=${encodeURIComponent(brandClean)}&model=${encodeURIComponent(modelClean)}`);
+        const data = await res.json();
+        if (data.videoId) {
+          setVideoId(data.videoId);
         }
-        <a href={product.affiliateURL} target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-          Comprar en Thomann
-        </a>
+      } catch (err) {
+        console.error('Error al cargar video:', err);
+      }
+    };
+
+    fetchVideo();
+  }, [Brand, Model]);
+
+  return (
+    <main className="bg-white min-h-screen mt-[150px] px-4 max-w-xl mx-auto text-center">
+      <div className="mb-6">
+        <img
+          src={ImageURL || '/logo-compartitura3.png'}
+          alt={Model}
+          className="mx-auto max-h-[200px] w-auto object-contain rounded"
+          onError={(e) => e.currentTarget.src = '/logo-compartitura3.png'}
+        />
       </div>
-    </>
+
+      <div className="mb-2">
+        <span className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+          {Brand}
+        </span>
+      </div>
+
+      <h1 className="text-2xl font-semibold mb-4">{Brand} {Model}</h1>
+
+      {Description && (
+        <p className="text-gray-600 text-sm mb-6">{Description}</p>
+      )}
+
+      <Link href={affiliateURL} legacyBehavior>
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-black text-white px-6 py-3 rounded-lg text-sm font-medium tracking-wide hover:opacity-90 transition mb-6"
+        >
+          Ver en Thomann →
+        </a>
+      </Link>
+
+      {videoId && (
+        <div className="aspect-video w-full max-w-xl mx-auto rounded overflow-hidden shadow">
+          <iframe
+            className="w-full h-full"
+            src={getVideoURL(videoId)}
+            title={`${Brand} ${Model} demo`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      )}
+    </main>
   );
 }
