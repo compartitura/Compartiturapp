@@ -1,40 +1,12 @@
 // pages/index.js
 import fs from 'fs';
 import path from 'path';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Card from '../components/ui/Card';
 
 export async function getStaticProps() {
   const all = JSON.parse(
     fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
-
-  );
-
-  const firstLevels = Array.from(
-    new Set(
-      all
-        .map(p => (p.CategoryTree || '').split('>')[0].trim())
-        .filter(Boolean)
-    )
-  ).sort();
-
-  const FAVORITE_CATEGORIES = [
-    'Guitarras',
-    'Teclados',
-    'Instrumentos de Viento'
-  ];
-  const sortedCategories = [
-    ...FAVORITE_CATEGORIES.filter(cat => firstLevels.includes(cat)),
-    ...firstLevels.filter(cat => !FAVORITE_CATEGORIES.includes(cat))
-  ];
-
-  const page = parseInt(query.page || '1', 10);
-  const perPage = 20;
-  const totalPages = Math.ceil(all.length / perPage);
-  const slice = all.slice(
-    (page - 1) * perPage,
-    (page - 1) * perPage + perPage
-
   );
 
   return {
