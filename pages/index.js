@@ -9,7 +9,7 @@ import { translateCategory } from '../utils/translations';
 
 export async function getServerSideProps({ query }) {
   const all = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), 'data', 'products.json'), 'utf-8')
+    fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
   );
 
   const firstLevels = Array.from(
