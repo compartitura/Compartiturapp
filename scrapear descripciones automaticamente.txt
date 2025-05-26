@@ -1,0 +1,49 @@
+// vercel.json en la raíz del proyecto
+{
+  "build": {
+    "env": {
+      "VERCEL_TOKEN": "TU_TOKEN_AQUI" renovar caduca a la semana
+    }
+  }
+}
+
+
+# Archivo: deploy-incremental.ps1 (guárdalo en la raíz)
+
+param(
+  [int]$Total = 115465,
+  [int]$Chunk = 100,
+  [int]$Start = 300,
+  [string]$ScriptPath = 'scripts/enrich-chunk.cjs'
+)
+
+while ($Start -lt $Total) {
+    Write-Host "→ Procesando productos del $Start al $($Start + $Chunk - 1)..."
+    node $ScriptPath $Start $Chunk
+
+    Write-Host "→ Desplegando en Vercel..."
+    vercel --prod --yes
+
+    $Start += $Chunk
+    Write-Host ""
+}
+
+Write-Host "✅ ¡Hecho! Procesados $Total productos."
+
+
+# Pasos para ejecutarlo
+
+Sal del REPL de Node (Ctrl+C o .exit) y abre PowerShell (prompt PS C:\>).
+
+Sitúate en la carpeta del proyecto:
+
+cd C:\tiendathomannemiweb
+
+# (Sólo una vez) Permite ejecución de scripts:
+
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+
+#Ejecuta el script:
+
+.\deploy-incremental.ps1
+

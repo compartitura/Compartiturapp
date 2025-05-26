@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "VERCEL_TOKEN": "byPBAVRuj7pAb9x6xwJAz4c0"
+    }
+  }
+}
