@@ -8,7 +8,7 @@ export async function getServerSideProps({ req }) {
     : 'https://' + req.headers.host;
 
   const res = await fetch(`${baseUrl}/data/versions/products.json`);
-  const all = await res.json();
+  const all = (await res.json()).slice(0, 1000); // Limita a los primeros 1000 productos
 
   return {
     props: { allProducts: all },
