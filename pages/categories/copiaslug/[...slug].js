@@ -1,17 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Card from '../../components/ui/Card';
 import { translateCategory } from '../../utils/translations';
 
 export async function getServerSideProps({ params }) {
   const all = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
+    fs.readFileSync(path.join(process.cwd(), 'data/versions/products.json'), 'utf-8')
   );
 
-  const slugArr = (params.slug || []).map(decodeURIComponent); // ✅ esto arregla espacios/paréntesis
+  const slugArr = params.slug || [];
   const prefix = slugArr.join(' > ').toLowerCase();
 
   const inCategory = all.filter(p =>
@@ -29,18 +28,7 @@ export async function getServerSideProps({ params }) {
     )
   ).sort();
 
-  const FAVORITE_SUBCATEGORIES = [
-    'Saxofones', 'Trompetas', 'Clarinetes', 'Fliscornos', 'Trompas',
-    'Trombones', 'Trompas tenor', 'Barítonos', 'Trompa alto/barítono',
-    'Bombardinos', 'Tubas', 'Oboes', 'Fagots', 'Flautas traveseras', 'Flautas de pico'
-  ];
-
-  const sortedSubs = [
-    ...FAVORITE_SUBCATEGORIES.filter(s => subs.includes(s)),
-    ...subs.filter(s => !FAVORITE_SUBCATEGORIES.includes(s))
-  ];
-
-  const subItems = sortedSubs.map(sub => {
+  const subItems = subs.map(sub => {
     const prod = inCategory.find(p => {
       const levels = (p.CategoryTree || '').split('>').map(s => s.trim());
       return levels[slugArr.length] === sub;
@@ -52,16 +40,18 @@ export async function getServerSideProps({ params }) {
     };
   });
 
+  const filtered = inCategory;
+
   return {
     props: {
       slug: slugArr,
       subItems,
-      products: inCategory || [],
+      filtered,
     },
   };
 }
 
-export default function Categoria({ slug, subItems, products }) {
+export default function Categoria({ slug, subItems, filtered }) {
   const [visibleCount, setVisibleCount] = useState(20);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const observer = useRef();
@@ -121,11 +111,11 @@ export default function Categoria({ slug, subItems, products }) {
         </div>
       ) : (
         <div className="flex flex-col gap-6">
-          {products.slice(0, visibleCount).map(product => (
+          {filtered.slice(0, visibleCount).map(product => (
             <Card key={product.ArticleNumber} product={product} />
           ))}
 
-          {visibleCount < products.length && (
+          {visibleCount < filtered.length && (
             <>
               <div ref={loadMore} className="h-10" />
               {isLoadingMore && (
