@@ -4,7 +4,7 @@ import path from 'path';
 import { useState, useRef, useCallback } from 'react';
 import Card from '../components/ui/Card';
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const all = JSON.parse(
     fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
   );
