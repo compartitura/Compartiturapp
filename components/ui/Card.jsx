@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 const FALLBACK = '/logo-compartitura3.png';
 
 export default function Card({ product, query = '' }) {
-  const { Brand, Model, ImageURL, Description, ArticleNumber } = product;
+  const { Brand, Model, ImageURL, Description, affiliateURL, ArticleNumber } = product;
   const title = `${Brand} ${Model}`;
   const snippet = Description?.length > 60 ? Description.slice(0, 60) + '…' : Description;
 
@@ -30,6 +30,11 @@ export default function Card({ product, query = '' }) {
       const count = updated ? favoriteCount + 1 : favoriteCount - 1;
       setFavoriteCount(count);
       localStorage.setItem(`favorite-${ArticleNumber}`, JSON.stringify({ favorite: updated, count }));
+      if (updated) {
+        localStorage.setItem(`product-${ArticleNumber}`, JSON.stringify(product));
+      } else {
+        localStorage.removeItem(`product-${ArticleNumber}`);
+      }
       return updated;
     });
   };
