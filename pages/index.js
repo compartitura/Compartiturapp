@@ -1,13 +1,14 @@
 // pages/index.js
-import fs from 'fs';
-import path from 'path';
 import { useState, useRef, useCallback } from 'react';
 import Card from '../components/ui/Card';
 
-export async function getServerSideProps() {
-  const all = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
-  );
+export async function getServerSideProps({ req }) {
+  const baseUrl = req.headers.host?.startsWith('localhost')
+    ? 'http://localhost:3000'
+    : 'https://' + req.headers.host;
+
+  const res = await fetch(`${baseUrl}/data/versions/products.json`);
+  const all = await res.json();
 
   return {
     props: { allProducts: all },
