@@ -24,8 +24,8 @@ export default function FavoritesPage() {
         &times;
       </Link>
 
-      <h1 className="text-2xl font-semibold mb-6 text-center">❤️ Mis favoritos</h1>
-
+      <h1 className="text-2xl font-semibold mb-6 text-center">❤️ Mi lista de deseos</h1>
+      <h3 className="text-l mb-6 text-center">Aqui tienes todos tus deseos guardados para cuando quieras comprarlos tenerlo bien a mano.</h3>
       {favorites.length > 0 ? (
         <div className="flex flex-col gap-4">
           {favorites.map(p => (
@@ -33,7 +33,7 @@ export default function FavoritesPage() {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">No tenés productos guardados todavía.</p>
+        <p className="text-center text-gray-500">No tenines productos guardados todavía.</p>
       )}
     </main>
   );

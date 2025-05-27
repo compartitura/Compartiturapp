@@ -9,6 +9,7 @@ export default function Header() {
   const [expanded, setExpanded] = useState({});
   const [showHeader, setShowHeader] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
   useEffect(() => {
     // Armar árbol de categorías
@@ -37,7 +38,6 @@ export default function Header() {
       });
   }, []);
 
-  // Auto-hide del header superior
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY) setShowHeader(false);
@@ -47,6 +47,12 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    const keys = Object.keys(localStorage);
+    const favs = keys.filter(k => k.startsWith('favorite-') && localStorage.getItem(k).includes('"favorite":true'));
+    setWishlistCount(favs.length);
+  }, [menuOpen]); // actualizar cada vez que se abre el menú
 
   const toggle = (key) => {
     setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
@@ -75,16 +81,17 @@ export default function Header() {
             Instrumentos y accesorios nuevos
           </div>
 
-          {/* ❤️ Favoritos */}
+          {/* 🛒 Lista de deseos con contador */}
           <Link href="/favorites" legacyBehavior>
-            <a title="Mis favoritos" className="ml-4">
-              <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                  2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
-                  C13.09 3.81 14.76 3 16.5 3
-                  19.58 3 22 5.42 22 8.5
-                  c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            <a title="Mi lista de deseos" className="ml-4 relative">
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1 5h13M10 21h.01M16 21h.01" />
               </svg>
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-2 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                  {wishlistCount}
+                </span>
+              )}
             </a>
           </Link>
         </div>
@@ -108,42 +115,40 @@ export default function Header() {
       </div>
 
       {/* Menú lateral desplegable */}
-{menuOpen && (
-  <div className="fixed top-0 left-0 w-4/5 h-screen bg-white shadow-xl z-50 overflow-y-auto p-6">
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-lg font-semibold">Categorías</h2>
-      <button onClick={() => setMenuOpen(false)} className="text-gray-500 hover:text-black text-2xl">&times;</button>
-    </div>
-
-    {Object.entries(categoryTree).map(([cat, subs]) => (
-      <div key={cat} className="mb-3">
-        <button
-          onClick={() => toggle(cat)}
-          className="w-full text-left text-sm font-semibold text-gray-800 hover:underline"
-        >
-          {expanded[cat] ? '▼' : '▶'} {translateCategory(cat)}
-        </button>
-
-        {expanded[cat] && (
-          <div className="ml-4 mt-1 flex flex-col gap-1">
-            {Object.keys(subs).map(sub => (
-              <Link
-                key={sub}
-                href={`/categories/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}`}
-                onClick={() => setMenuOpen(false)}
-                className="text-sm text-gray-600 hover:text-black"
-              >
-                {translateCategory(sub)}
-              </Link>
-            ))}
+      {menuOpen && (
+        <div className="fixed top-0 left-0 w-4/5 h-screen bg-white shadow-xl z-50 overflow-y-auto p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Categorías</h2>
+            <button onClick={() => setMenuOpen(false)} className="text-gray-500 hover:text-black text-2xl">&times;</button>
           </div>
-        )}
-      </div>
-    ))}
-  </div>
-)}
 
+          {Object.entries(categoryTree).map(([cat, subs]) => (
+            <div key={cat} className="mb-3">
+              <button
+                onClick={() => toggle(cat)}
+                className="w-full text-left text-sm font-semibold text-gray-800 hover:underline"
+              >
+                {expanded[cat] ? '▼' : '▶'} {translateCategory(cat)}
+              </button>
 
+              {expanded[cat] && (
+                <div className="ml-4 mt-1 flex flex-col gap-1">
+                  {Object.keys(subs).map(sub => (
+                    <Link
+                      key={sub}
+                      href={`/categories/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-sm text-gray-600 hover:text-black"
+                    >
+                      {translateCategory(sub)}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </header>
   );
 }

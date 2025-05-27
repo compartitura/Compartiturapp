@@ -24,7 +24,13 @@ export default function Card({ product, query = '' }) {
     }
   }, [ArticleNumber]);
 
+  const incrementClick = () => {
+    const clicks = parseInt(localStorage.getItem(`clicks-${ArticleNumber}`) || '0');
+    localStorage.setItem(`clicks-${ArticleNumber}`, clicks + 1);
+  };
+
   const toggleFavorite = () => {
+    incrementClick();
     setFavorite(prev => {
       const updated = !prev;
       const count = updated ? favoriteCount + 1 : favoriteCount - 1;
@@ -37,6 +43,21 @@ export default function Card({ product, query = '' }) {
       }
       return updated;
     });
+  };
+
+  const addToCart = () => {
+    incrementClick();
+    localStorage.setItem(`cart-${ArticleNumber}`, JSON.stringify({ added: true, product }));
+
+    // también marcar como favorito automáticamente
+    const favData = JSON.parse(localStorage.getItem(`favorite-${ArticleNumber}`)) || { favorite: false, count: 0 };
+    if (!favData.favorite) {
+      const updatedCount = favData.count + 1;
+      localStorage.setItem(`favorite-${ArticleNumber}`, JSON.stringify({ favorite: true, count: updatedCount }));
+      localStorage.setItem(`product-${ArticleNumber}`, JSON.stringify(product));
+      setFavorite(true);
+      setFavoriteCount(updatedCount);
+    }
   };
 
   const highlight = (text) => {
@@ -80,8 +101,8 @@ export default function Card({ product, query = '' }) {
           )}
 
           <div className="mt-2 flex justify-end">
-            <span className="text-xs text-red-500">❤️ {favoriteCount}</span>
-          </div>
+  <span className="text-xs text-red-500">❤️ {favoriteCount}</span>
+</div>
         </div>
       </div>
     </Link>
