@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Card from '../../components/ui/Card';
 
 export async function getServerSideProps({ params }) {
   const slug = params.slug?.[0] || '';
@@ -11,12 +12,18 @@ export async function getServerSideProps({ params }) {
 
   const product = all.find(p => String(p.ArticleNumber) === slug);
 
-  if (!product) {
-    return { notFound: true };
-  }
+  if (!product) return { notFound: true };
+
+  const similares = all
+    .filter(p =>
+      p.ArticleNumber !== product.ArticleNumber &&
+      p.CategoryTree === product.CategoryTree
+    )
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 4);
 
   return {
-    props: { product }
+    props: { product, similares }
   };
 }
 
@@ -24,7 +31,7 @@ function getVideoURL(videoId) {
   return `https://www.youtube.com/embed/${videoId}`;
 }
 
-export default function ProductPage({ product }) {
+export default function ProductPage({ product, similares }) {
   const { Brand, Model, Description, ImageURL, affiliateURL } = product;
   const [videoId, setVideoId] = useState(null);
 
@@ -32,8 +39,7 @@ export default function ProductPage({ product }) {
     const fetchVideo = async () => {
       try {
         const clean = (text) =>
-          text
-            .toLowerCase()
+          text.toLowerCase()
             .replace(/["'`]/g, '')
             .replace(/[-_]/g, ' ')
             .replace(/[^\w\s]/g, '')
@@ -88,8 +94,8 @@ export default function ProductPage({ product }) {
         </a>
       </Link>
 
-      {videoId && (
-        <div className="aspect-video w-full max-w-xl mx-auto rounded overflow-hidden shadow">
+      {videoId ? (
+        <div className="aspect-video w-full max-w-xl mx-auto rounded overflow-hidden shadow mb-6">
           <iframe
             className="w-full h-full"
             src={getVideoURL(videoId)}
@@ -98,6 +104,21 @@ export default function ProductPage({ product }) {
             allowFullScreen
           />
         </div>
+      ) : (
+        <p className="text-xs text-gray-400 mt-2 mb-6">
+          No se encontró un demo en YouTube para este producto.
+        </p>
+      )}
+
+      {similares.length > 0 && (
+        <section className="mt-10 text-left">
+          <h2 className="text-lg font-semibold mb-4 text-center">🎯 Otros productos similares</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {similares.map(prod => (
+              <Card key={prod.ArticleNumber} product={prod} />
+            ))}
+          </div>
+        </section>
       )}
     </main>
   );
