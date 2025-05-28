@@ -1,7 +1,8 @@
 {
   "build": {
     "env": {
-      "VERCEL_TOKEN": "byPBAVRuj7pAb9x6xwJAz4c0"
+      "VERCEL_TOKEN": "byPBAVRuj7pAb9x6xwJAz4c0",
+      "NEXT_PRIVATE_SWCR_BINARY_TARGET": "nodejs-swc"
     }
   }
 }
