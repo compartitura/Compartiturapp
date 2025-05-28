@@ -15,7 +15,7 @@ export default function handler(req, res) {
       ? JSON.parse(fs.readFileSync(filePath, 'utf8'))
       : [];
 
-    nuevo.id = 'u' + Date.now(); // genera ID único simple
+    nuevo.id = 'u' + Date.now(); // genera ID único
     data.push(nuevo);
 
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');

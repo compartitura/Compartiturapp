@@ -1,27 +1,71 @@
-// pages/api/publicar.js
-import fs from 'fs';
-import path from 'path';
+// pages/publicar.js
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-export default function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
+export default function Publicar() {
+  const [form, setForm] = useState({
+    title: '',
+    category: '',
+    price: '',
+    phone: ''
+  });
+  const router = useRouter();
 
-  const filePath = path.join(process.cwd(), 'public/data/used-products.json');
-  const nuevo = req.body;
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  try {
-    const data = fs.existsSync(filePath)
-      ? JSON.parse(fs.readFileSync(filePath, 'utf8'))
-      : [];
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const res = await fetch('/api/publicar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    if (res.ok) router.push('/usados');
+    else alert('Error al guardar.');
+  };
 
-    nuevo.id = 'u' + Date.now(); // genera ID único
-    data.push(nuevo);
-
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error('Error al guardar:', err);
-    return res.status(500).json({ error: 'Error al guardar' });
-  }
+  return (
+    <div className="max-w-xl mx-auto mt-10 p-4">
+      <h1 className="text-xl font-bold mb-4">Publicar Instrumento</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          className="w-full border p-2"
+          placeholder="Título"
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="w-full border p-2"
+          placeholder="Categoría"
+          name="category"
+          value={form.category}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="w-full border p-2"
+          placeholder="Precio"
+          name="price"
+          value={form.price}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="w-full border p-2"
+          placeholder="Teléfono de contacto"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+          required
+        />
+        <button className="bg-black text-white px-4 py-2 rounded" type="submit">
+          Publicar
+        </button>
+      </form>
+    </div>
+  );
 }
