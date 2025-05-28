@@ -1,26 +1,32 @@
 import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Card from '../../components/ui/Card';
 import { translateCategory } from '../../utils/translations';
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, query }) {
   const all = JSON.parse(
     fs.readFileSync(path.join(process.cwd(), 'data', 'versions', 'products.json'), 'utf-8')
   );
 
-  const slugArr = (params.slug || []).map(decodeURIComponent); // ✅ esto arregla espacios/paréntesis
-  const prefix = slugArr.join(' > ').toLowerCase();
+  const slugArr = (params.slug || []).map(decodeURIComponent);
+  const prefix = slugArr.join(' > ').toLowerCase().trim();
+  const brandFilter = query.brand?.toLowerCase() || null;
 
-  const inCategory = all.filter(p =>
-    (p.CategoryTree || '').toLowerCase().startsWith(prefix)
-  );
+  let inCategory = all.filter(p => {
+    const cat = (p.CategoryTree || '').toLowerCase().trim();
+    return cat === prefix;
+  });
+
+  if (brandFilter) {
+    inCategory = inCategory.filter(p => p.Brand?.toLowerCase() === brandFilter);
+  }
 
   const subs = Array.from(
     new Set(
-      inCategory
+      all
+        .filter(p => (p.CategoryTree || '').toLowerCase().trim().startsWith(prefix + ' >'))
         .map(p => {
           const levels = (p.CategoryTree || '').split('>').map(s => s.trim());
           return levels[slugArr.length];
@@ -41,9 +47,12 @@ export async function getServerSideProps({ params }) {
   ];
 
   const subItems = sortedSubs.map(sub => {
-    const prod = inCategory.find(p => {
+    const prod = all.find(p => {
       const levels = (p.CategoryTree || '').split('>').map(s => s.trim());
-      return levels[slugArr.length] === sub;
+      return (
+        levels[slugArr.length] === sub &&
+        (p.CategoryTree || '').toLowerCase().trim().startsWith(prefix + ' >')
+      );
     });
     return {
       name: sub,
@@ -56,12 +65,13 @@ export async function getServerSideProps({ params }) {
     props: {
       slug: slugArr,
       subItems,
-      products: inCategory || [],
+      products: inCategory,
+      brandFilter
     },
   };
 }
 
-export default function Categoria({ slug, subItems, products }) {
+export default function Categoria({ slug, subItems, products, brandFilter }) {
   const [visibleCount, setVisibleCount] = useState(20);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const observer = useRef();
@@ -81,7 +91,7 @@ export default function Categoria({ slug, subItems, products }) {
   }, []);
 
   return (
-    <div className="bg-white w-full mx-auto p-6 pt-28">
+    <div className="bg-white w-full mx-auto p-6 pt-[120px]">
       <nav className="text-sm mb-4">
         <Link href="/" legacyBehavior>
           <a className={slug.length === 0 ? 'font-semibold text-primary' : 'hover:underline'}>
@@ -103,16 +113,22 @@ export default function Categoria({ slug, subItems, products }) {
         })}
       </nav>
 
+      {brandFilter && (
+        <p className="text-sm mb-4">
+          Filtrando por marca: <span className="font-semibold">{brandFilter}</span>
+        </p>
+      )}
+
       {subItems.length > 0 ? (
         <div className="flex flex-col gap-4">
           {subItems.map(item => (
             <Link key={item.name} href={`/categories/${[...slug, item.slug].join('/')}`} legacyBehavior>
               <a className="flex items-center gap-4 bg-white p-4 rounded-lg shadow hover:-translate-y-1 transition-transform">
                 <img
-                  src={item.imageURL || '/logo-compartitura3.png'}
+                  src={item.imageURL}
                   alt={item.name}
                   className="w-[70px] h-[70px] object-contain bg-white rounded"
-                  onError={e => e.currentTarget.src = '/logo-compartitura3.png'}
+                  onError={e => (e.currentTarget.src = '/logo-compartitura3.png')}
                 />
                 <span className="text-base font-semibold text-gray-800">{translateCategory(item.name)}</span>
               </a>

@@ -76,6 +76,14 @@ export default function ProductPage({ product, similares }) {
   const handleAddToCart = () => {
     localStorage.setItem(`cart-${ArticleNumber}`, JSON.stringify({ added: true, product }));
     setCartAdded(true);
+
+    const favData = JSON.parse(localStorage.getItem(`favorite-${ArticleNumber}`)) || { favorite: false, count: 0 };
+    if (!favData.favorite) {
+      const updatedCount = favData.count + 1;
+      localStorage.setItem(`favorite-${ArticleNumber}`, JSON.stringify({ favorite: true, count: updatedCount }));
+      localStorage.setItem(`product-${ArticleNumber}`, JSON.stringify(product));
+      setFavoriteCount(updatedCount);
+    }
   };
 
   return (
@@ -91,7 +99,7 @@ export default function ProductPage({ product, similares }) {
 
       <div className="mb-4 flex items-center justify-center gap-3 flex-wrap">
         <Link
-          href={`/categories/${encodeURIComponent(product.CategoryTree?.split('>')[0]?.trim() || '')}/${encodeURIComponent(product.CategoryTree?.split('>')[1]?.trim() || '')}/${encodeURIComponent(product.CategoryTree?.split('>')[2]?.trim() || '')}?brand=${encodeURIComponent(Brand)}`}
+          href={`/categories/${encodeURIComponent(product.CategoryTree?.split('>')[0]?.trim() || '')}/${encodeURIComponent(product.CategoryTree?.split('>')[1]?.trim() || '')}?brand=${encodeURIComponent(Brand)}`}
           legacyBehavior
         >
           <a className="inline-block bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full uppercase tracking-wider hover:bg-gray-300 transition">
