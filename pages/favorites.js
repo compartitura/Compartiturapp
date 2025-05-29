@@ -1,92 +1,157 @@
-// pages/favorites.js
-import { useEffect, useState } from 'react';
-import Card from '../components/ui/Card';
+import fs from 'fs';
+import path from 'path';
+import { useState } from 'react';
 import Link from 'next/link';
-import { limpiarFavoritosSinProducto } from '../utils/cleanupFavorites';
 
-function getFavoritosDesdeLocalStorage() {
-  const usados = [];
-  const nuevos = [];
+export async function getStaticProps() {
+  const data = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), 'data/versions/products.json'), 'utf-8')
+  );
 
-  Object.keys(localStorage).forEach(k => {
-    if (!k.startsWith('favorite-')) return;
-    try {
-      const id = k.replace('favorite-', '');
-      const product = JSON.parse(localStorage.getItem(`product-${id}`));
-      if (product) {
-        if (product?.id?.startsWith('u')) usados.push(product);
-        else nuevos.push(product);
-      }
-    } catch {}
-  });
+  const ultimos = data.slice(-20).reverse();
+  const destacados = data.slice(0, 10);
+  const buscados = Array.isArray(data) ? data.slice(100, 110) : [];
+  const partituras = data.filter(p => (p.CategoryTree || '').toLowerCase().includes('sheet music')).slice(0, 10);
 
   return {
-    usados: usados.sort((a, b) => {
-      const ida = parseInt(a.id?.replace(/\D/g, '') || 0);
-      const idb = parseInt(b.id?.replace(/\D/g, '') || 0);
-      return idb - ida;
-    }),
-    nuevos,
+    props: {
+      ultimos,
+      destacados,
+      buscados,
+      partituras,
+    },
   };
 }
 
-export default function FavoritesPage() {
-  const [usados, setUsados] = useState([]);
-  const [nuevos, setNuevos] = useState([]);
+export default function Home({ ultimos, destacados, buscados, partituras }) {
+  const [musicoActivo, setMusicoActivo] = useState(null);
 
-  useEffect(() => {
-    const { usados, nuevos } = getFavoritosDesdeLocalStorage();
-    setUsados(usados);
-    setNuevos(nuevos);
-  }, []);
+  const musicos = [
+    {
+      nombre: 'Carla Rivas',
+      instrumento: 'Violín 🇪🇸',
+      ubicacion: 'Madrid, España',
+      descripcion: 'Violinista clásica con más de 10 años de experiencia en orquestas y proyectos solistas.',
+      img: 'https://randomuser.me/api/portraits/women/44.jpg',
+      tel: '+34666111222'
+    },
+    {
+      nombre: 'Javi Gómez',
+      instrumento: 'Bajo 🇪🇸',
+      ubicacion: 'Valencia, España',
+      descripcion: 'Bajista versátil, disponible para grabaciones y giras de rock/funk.',
+      img: 'https://randomuser.me/api/portraits/men/52.jpg',
+      tel: '+34666111333'
+    },
+    {
+      nombre: 'Marina León',
+      instrumento: 'Piano 🇪🇸',
+      ubicacion: 'Sevilla, España',
+      descripcion: 'Pianista moderna y acompañante de cantantes líricos y contemporáneos.',
+      img: 'https://randomuser.me/api/portraits/women/55.jpg',
+      tel: '+34666111444'
+    },
+  ];
 
   return (
-    <main className="bg-white min-h-screen pt-[150px] px-4 max-w-4xl mx-auto relative">
-      <Link href="/" className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-black z-50">
-        &times;
-      </Link>
+    <main className="pt-28 px-4 max-w-6xl mx-auto space-y-12">
 
-      <h1 className="text-2xl font-semibold mb-6 text-center">❤️ Mi lista de deseos</h1>
-      <h3 className="text-l mb-6 text-center">Aquí tienes todos tus deseos guardados para cuando quieras comprarlos tenerlo bien a mano.</h3>
+      <section>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Partituras destacadas</h2>
+          <Link href="/partituras" className="text-sm text-gray-600 hover:underline">Ver todas</Link>
+        </div>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {partituras.map((p, i) => (
+            <div key={i} className="min-w-[160px] max-w-[160px] border rounded p-2 text-center flex-shrink-0">
+              <img src={p.ImageURL} alt={p.Model} className="w-full h-auto rounded mb-2" />
+              <p className="text-xs font-medium">{p.Brand} {p.Model}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <div className="text-right mb-4">
-        <button
-          onClick={() => {
-            const count = limpiarFavoritosSinProducto();
-            alert(`${count} favoritos sin producto fueron eliminados.`);
-            location.reload();
-          }}
-          className="text-xs bg-gray-100 border border-gray-300 px-3 py-1 rounded hover:bg-gray-200"
-        >
-          Limpiar favoritos huérfanos
-        </button>
-      </div>
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Productos destacados</h2>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {destacados.map(p => (
+            <a key={p.ArticleNumber} href={p.affiliateURL} className="min-w-[160px] max-w-[160px] border p-2 rounded text-center flex-shrink-0">
+              <img src={p.ImageURL} alt={p.Model} className="w-full h-auto mb-2 rounded" />
+              <p className="text-sm">{p.Brand} {p.Model}</p>
+            </a>
+          ))}
+        </div>
+      </section>
 
-      {usados.length > 0 && (
-        <section className="mb-10">
-          <h2 className="text-xl font-semibold text-green-700 mb-4">🎸 Usados</h2>
-          <div className="flex flex-col gap-4">
-            {usados.map(product => (
-              <Card key={`u-${product.id || product.ArticleNumber}`} product={product} />
-            ))}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Lo más buscado</h2>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {Array.isArray(buscados) && buscados.map(p => (
+            <a key={p.ArticleNumber} href={p.affiliateURL} className="min-w-[160px] max-w-[160px] border p-2 rounded text-center flex-shrink-0">
+              <img src={p.ImageURL} alt={p.Model} className="w-full h-auto mb-2 rounded" />
+              <p className="text-sm">{p.Brand} {p.Model}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Últimos productos añadidos</h2>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {ultimos.map(p => (
+            <a key={p.ArticleNumber} href={p.affiliateURL} className="min-w-[160px] max-w-[160px] border p-2 rounded text-center flex-shrink-0">
+              <img src={p.ImageURL} alt={p.Model} className="w-full h-auto mb-2 rounded" />
+              <p className="text-sm">{p.Brand} {p.Model}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Músicos destacados</h2>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {musicos.map((m, i) => (
+            <div key={i} className="text-center cursor-pointer" onClick={() => setMusicoActivo(m)}>
+              <img src={m.img} alt={m.nombre} className="rounded-full w-20 h-20 mx-auto mb-2" />
+              <p className="text-sm font-medium">{m.nombre}</p>
+              <p className="text-xs text-gray-500">{m.instrumento}</p>
+            </div>
+          ))}
+        </div>
+        {musicoActivo && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded shadow w-80 text-center relative">
+              <button
+                className="absolute top-2 right-3 text-gray-400 hover:text-black"
+                onClick={() => setMusicoActivo(null)}
+              >✕</button>
+              <img src={musicoActivo.img} alt={musicoActivo.nombre} className="w-24 h-24 rounded-full mx-auto mb-4" />
+              <h3 className="text-lg font-bold mb-1">{musicoActivo.nombre}</h3>
+              <p className="text-sm text-gray-600 mb-1">{musicoActivo.instrumento}</p>
+              <p className="text-sm text-gray-500 mb-4">{musicoActivo.ubicacion}</p>
+              <p className="text-sm text-gray-600 mb-4">{musicoActivo.descripcion}</p>
+              <a
+                href={`https://wa.me/${musicoActivo.tel.replace('+', '')}`}
+                className="inline-block bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                target="_blank"
+              >
+                Contactar por WhatsApp
+              </a>
+            </div>
           </div>
-        </section>
-      )}
+        )}
+      </section>
 
-      {nuevos.length > 0 && (
-        <section>
-          <h2 className="text-xl font-semibold text-blue-700 mb-4">🆕 Nuevos</h2>
-          <div className="flex flex-col gap-4">
-            {nuevos.map(product => (
-              <Card key={`n-${product.ArticleNumber || product.id}`} product={product} />
-            ))}
-          </div>
-        </section>
-      )}
+      <section className="bg-gray-100 p-6 rounded text-center">
+        <h2 className="text-lg font-semibold mb-2">Únete a nuestra comunidad en WhatsApp</h2>
+        <p className="text-sm text-gray-600 mb-4">Conectá con músicos, novedades, y ofertas exclusivas.</p>
+        <a
+          href="https://wa.me/34123456789"
+          className="inline-block bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600"
+          target="_blank"
+        >Entrar al grupo</a>
+      </section>
 
-      {usados.length === 0 && nuevos.length === 0 && (
-        <p className="text-center text-gray-500">No tienes productos guardados todavía.</p>
-      )}
     </main>
   );
 }
