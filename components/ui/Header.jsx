@@ -106,19 +106,19 @@ useEffect(() => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow">
-        <div className="px-4 py-2 flex items-center justify-between border-b">
+        <div className="px-6 py-2 flex items-center justify-between border-b">
           <Link href="/">
             <Image
               src="https://www.compartitura.org/medias/images/captura3.5dc51b958b6c69.11833439-0x80-1-.png"
               alt="Logo"
-              width={40}
-              height={40}
+              width={50}
+              height={50}
               className="object-contain"
             />
           </Link>
 
-          <div className="text-sm font-semibold text-gray-700 text-center flex-grow">
-            Instrumentos y accesorios
+          <div class="text-2xl font-semibold mb-4">
+              Compartitura
           </div>
 
           <Link href="/favorites" className="ml-4 relative" title="Mi lista de deseos">
