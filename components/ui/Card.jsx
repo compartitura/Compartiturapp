@@ -31,9 +31,6 @@ export default function Card({ product, query = '' }) {
     localStorage.setItem(`clicks-${ArticleNumber}`, clicks + 1);
   };
 
- // components/ui/Card.jsx
-// ... código existente arriba sin cambios
-
   const toggleFavorite = () => {
     incrementClick();
     setFavorite(prev => {
@@ -51,9 +48,6 @@ export default function Card({ product, query = '' }) {
       return updated;
     });
   };
-
-// ... el resto del código permanece igual
-
 
   const highlight = (text) => {
     if (!query || query.length < 2) return text;
@@ -103,8 +97,20 @@ export default function Card({ product, query = '' }) {
 
           <div className="flex items-center justify-between mt-2">
             <span className="text-xs text-red-500">❤️ {favoriteCount}</span>
-            {typeof Price !== 'undefined' && <span className="text-sm font-bold text-green-700">${Price}</span>}
+            {typeof Price !== 'undefined' && <span className="text-sm font-bold text-green-700">{product.Currency || '€'} {Price}</span>}
           </div>
+
+          {/* Botón de contacto solo si es usado y tiene teléfono */}
+          {isUsed && product.Phone && (
+            <a
+              href={`https://wa.me/${product.Phone.replace(/[^\d]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-2 text-xs text-white bg-green-600 px-3 py-1 rounded hover:bg-green-700"
+            >
+              Contactar por WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </Link>

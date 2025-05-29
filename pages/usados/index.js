@@ -82,7 +82,7 @@ export default function Usados({ products }) {
   };
 
   return (
-    <main className="bg-white w-full mx-auto p-4 pt-28 max-w-5xl relative">
+    <main className="bg-white w-full mx-auto p-4 pt-[150px] max-w-5xl relative">
       <h1 className="text-2xl font-bold text-center mb-6">Instrumentos Usados</h1>
 
       <div className="flex flex-col gap-6">
