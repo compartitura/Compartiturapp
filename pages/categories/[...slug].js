@@ -64,7 +64,7 @@ export default function CategoryPage({ allProducts }) {
   });
 
   return (
-    <main className="bg-white w-full mx-auto p-4 pt-[150px] max-w-5xl">
+    <main className="bg-white w-full mx-auto p-4 pt-28 max-w-5xl">
       <div className="flex justify-end mb-4">
         <button
           onClick={toggleView}

@@ -87,7 +87,7 @@ export default function ProductPage({ product, similares }) {
   };
 
   return (
-    <main className="bg-white min-h-screen mt-[150px] px-4 max-w-xl mx-auto text-center">
+    <main className="bg-white min-h-screen mt-28 px-4 max-w-xl mx-auto text-center">
       <div className="mb-6">
         <img
           src={ImageURL || '/logo-compartitura3.png'}
