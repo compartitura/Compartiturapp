@@ -37,7 +37,7 @@ const grupos = [
     tipo: 'estilo',
     suscripcion: 'musico',
     descripcion: 'Dedicado a la música procesional y religiosa tradicional.',
-    imagen: '/grupos/cofrade.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-0000000045a861f7b6cd57eb6eaeef37-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-cd766616-153e-4d85-ad33-43224a55bbd9.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -52,7 +52,7 @@ const grupos = [
     tipo: 'estilo',
     suscripcion: 'musico',
     descripcion: 'Para amantes e intérpretes de estos géneros vivos y dinámicos.',
-    imagen: '/grupos/jazz-dixieland-charanga.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000bd0461f7b5cd22c5f9120b4f-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-3be555c3-dcfa-4533-a468-f4507bed2ece.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -67,7 +67,7 @@ const grupos = [
     tipo: 'estilo',
     suscripcion: 'musico',
     descripcion: 'Obras completas B.S.O.',
-    imagen: '/grupos/cofrade.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000bfec61f7aa5b70540f07a10a-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-bed0e75e-1259-48e4-987f-fd9a28403a9c.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -82,7 +82,37 @@ const grupos = [
     tipo: 'voz',
     suscripcion: 'musico',
     descripcion: 'Encuentro para coros y aficionados al canto coral.',
-    imagen: '/grupos/coral.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000a2a461f7a2a42f1c49ea14ee-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-88596a86-4174-4538-9759-29e4d136ee27.png?fx=c_120_120',
+    enlaces: {
+      whatsapp: '#',
+      partituras: '#',
+      tienda: '#',
+      profesionales: '#',
+      empleo: '#',
+      premium: '#',
+    }
+  },
+  {
+    nombre: 'Cantantes',
+    tipo: 'voz',
+    suscripcion: 'registro',
+    descripcion: 'Espacio para intérpretes vocales, solistas o corales.',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000038c61f7b784534b1611c72e-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-3abf82ec-40a1-429e-b7d8-5e9c44f267e5.png?fx=c_120_120',
+    enlaces: {
+      whatsapp: '#',
+      partituras: '#',
+      tienda: '#',
+      profesionales: '#',
+      empleo: '#',
+      premium: '#',
+    }
+  },
+  {
+    nombre: 'Interpretes Solistas y de Ensamble',
+    tipo: 'voz',
+    suscripcion: 'registro',
+    descripcion: 'Red de apoyo e intercambio entre músicos solistas o de pequeños grupos.',
+    imagen: 'https://www.compartitura.org/medias/images/file-0000000024f861f7a65e0f87f503423f-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-3c399cef-e107-4978-b53e-4316286d0845.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -97,7 +127,7 @@ const grupos = [
     tipo: 'academico',
     suscripcion: 'registro',
     descripcion: 'Comunidad para quienes investigan la historia y teoría de la música.',
-    imagen: '/grupos/musicologos.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000e04c61f797eca08f30dac664-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-e190bd1e-b521-44ca-955e-38c3df21f818.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -112,7 +142,7 @@ const grupos = [
     tipo: 'aficionados',
     suscripcion: 'registro',
     descripcion: 'Para quienes disfrutan de la música desde una perspectiva apasionada y conocedora.',
-    imagen: '/grupos/melomanos.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000bacc61f796e2b7e39c4ce54f-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-9ad0a02c-e7b4-4795-8b9a-fd62e9eabb31.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -127,7 +157,7 @@ const grupos = [
     tipo: 'edicion',
     suscripcion: 'registro',
     descripcion: 'Grupo dedicado a la creación, edición y copia de partituras.',
-    imagen: '/grupos/arreglistas.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000c08861f7a3c1ca90317385ef-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-5b0fcb94-0fb7-4717-a6fe-5027953f63d0.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -142,7 +172,7 @@ const grupos = [
     tipo: 'educacion',
     suscripcion: 'registro',
     descripcion: 'Para estudiantes que se están formando como compositores o directores.',
-    imagen: '/grupos/estudiantes.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-0000000081fc61f7ae86861430255045-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-8152145e-e902-4167-94d4-48d49af8f6b5.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -157,7 +187,7 @@ const grupos = [
     tipo: 'educacion',
     suscripcion: 'registro',
     descripcion: 'Para educadores musicales que desean compartir recursos y experiencias.',
-    imagen: '/grupos/profesores.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000fecc61f78681106ea5fb64dc-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-49789d06-ceea-49ad-bd8e-97c2eb2f259b.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -172,7 +202,7 @@ const grupos = [
     tipo: 'empleo',
     suscripcion: 'registro',
     descripcion: 'Convocatorias y oportunidades laborales para músicos.',
-    imagen: '/grupos/empleo.png',
+    imagen: 'https://www.compartitura.org/medias/images/file-0000000019ac61f7afcf7c45a3f21a14-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-c16f37cd-68f0-467b-81e5-8dbb9fb6fb5d.png?fx=c_120_120',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -228,21 +258,6 @@ const grupos = [
     }
   },
   {
-    nombre: 'Cantantes',
-    tipo: 'voz',
-    suscripcion: 'registro',
-    descripcion: 'Espacio para intérpretes vocales, solistas o corales.',
-    imagen: '/grupos/cantantes.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
     nombre: 'Acordeonistas',
     tipo: 'instrumento',
     suscripcion: 'registro',
@@ -278,21 +293,6 @@ const grupos = [
     suscripcion: 'registro',
     descripcion: 'Punto de encuentro para clarinetistas de todos los niveles.',
     imagen: '/grupos/clarinete.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
-    nombre: 'Contrabajistas',
-    tipo: 'instrumento',
-    suscripcion: 'registro',
-    descripcion: 'Red de contrabajistas de distintos géneros.',
-    imagen: '/grupos/contrabajo.png',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -378,21 +378,6 @@ const grupos = [
     }
   },
   {
-    nombre: 'Flautistas',
-    tipo: 'instrumento',
-    suscripcion: 'registro',
-    descripcion: 'Para flautistas de todos los niveles y estilos.',
-    imagen: '/grupos/flauta.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
     nombre: 'Fliscornistas',
     tipo: 'instrumento',
     suscripcion: 'registro',
@@ -438,21 +423,6 @@ const grupos = [
     }
   },
   {
-    nombre: 'Instrumentistas Solistas y de Ensamble',
-    tipo: 'instrumento',
-    suscripcion: 'registro',
-    descripcion: 'Red de apoyo e intercambio entre músicos solistas o de pequeños grupos.',
-    imagen: '/grupos/solistas.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
     nombre: 'Oboistas',
     tipo: 'instrumento',
     suscripcion: 'registro',
@@ -488,21 +458,6 @@ const grupos = [
     suscripcion: 'registro',
     descripcion: 'Para quienes tocan instrumentos de percusión.',
     imagen: '/grupos/percusion.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
-    nombre: 'Pianistas',
-    tipo: 'instrumento',
-    suscripcion: 'registro',
-    descripcion: 'Red de pianistas de distintos géneros y niveles.',
-    imagen: '/grupos/piano.png',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -673,14 +628,14 @@ export default function GruposComunidad() {
   );
 
   return (
-    <main className="pt-28 px-4 max-w-5xl mx-auto space-y-12">
+    <main className="pt-[130px] px-4 max-w-5xl mx-auto space-y-12">
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Grupos de la comunidad</h2>
+        <h1 className="text-1xl font-semibold mb-2">Grupos de la comunidad de Compartitura</h1>
 
         <div className="flex gap-2 mb-6">
-          <button className={`px-3 py-1 rounded ${filtro==='registro'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('registro')}>Solo registro</button>
-          <button className={`px-3 py-1 rounded ${filtro==='musico'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('musico')}>Modo Músico 🎖</button>
-          <button className={`px-3 py-1 rounded ${filtro==='director'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('director')}>Modo Director 🎖</button>
+          <button className={`px-3 py-1 rounded ${filtro==='registro'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('registro')}> Registrados 🆓</button>
+          <button className={`px-3 py-1 rounded ${filtro==='musico'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('musico')}> Músicos 🎖</button>
+          <button className={`px-3 py-1 rounded ${filtro==='director'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('director')}> Directores 🎖</button>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -696,7 +651,7 @@ export default function GruposComunidad() {
                 <p className="text-xs text-gray-500">{g.descripcion}</p>
               </div>
               {(g.suscripcion === 'director' || g.suscripcion === 'musico') && (
-                <span className="absolute top-2 right-2 text-xs bg-yellow-400 text-black px-2 rounded">🎖 Premium</span>
+                <span className="absolute top-2 right-2 text-xs bg-yellow-400 text-black px-2 rounded"> 🎖 </span>
               )}
             </div>
           ))}
@@ -716,8 +671,8 @@ export default function GruposComunidad() {
             <div className="space-y-2">
               <a href={activo.enlaces?.whatsapp || '#'} className="block bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">Acceso al grupo</a>
               <div className="relative">
-                <a href={activo.enlaces?.partituras || '#'} className="block bg-gray-800 text-white py-2 px-4 rounded hover:bg-black">Partituras, métodos y otros archivos</a>
-                <span className="absolute top-1 right-2 text-xs bg-yellow-400 text-black px-2 rounded">Premium</span>
+                <a href={activo.enlaces?.partituras || '#'} className="block bg-gray-800 text-white py-2 px-4 rounded hover:bg-black">Partituras y métodos</a>
+                <span className="absolute top-1 right-2 text-xs bg-yellow-400 text-black px-2 rounded"> 🎖 </span>
               </div>
               <a href={activo.enlaces?.tienda || '#'} className="block bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300">Tienda de instrumentos</a>
               <a href={activo.enlaces?.profesionales || '#'} className="block bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300">Buscar profesionales</a>
