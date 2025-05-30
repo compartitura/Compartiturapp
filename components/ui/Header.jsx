@@ -106,19 +106,19 @@ useEffect(() => {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow">
-        <div className="px-6 py-2 flex items-center justify-between border-b">
+        <div className="px-6 py-2 flex items-left justify-between border-b">
           <Link href="/">
             <Image
               src="https://www.compartitura.org/medias/images/captura3.5dc51b958b6c69.11833439-0x80-1-.png"
               alt="Logo"
-              width={50}
-              height={50}
+              width={40}
+              height={40}
               className="object-contain"
             />
           </Link>
 
-          <div class="text-2xl font-semibold mb-4">
-              Compartitura
+          <div class="text-1xl font-semibold mb-4">
+              Compartitura.org
           </div>
 
           <Link href="/favorites" className="ml-4 relative" title="Mi lista de deseos">
@@ -143,9 +143,9 @@ useEffect(() => {
 
             <Link
               href="/search"
-              className="cursor-pointer bg-gray-100 border border-gray-300 rounded-full px-4 py-2 text-sm text-gray-500 hover:shadow-inner"
+              className="cursor-pointer bg-white-100 border border-white-300 rounded-full px-4 py-2 text-sm text-gray-500 hover:shadow-inner"
             >
-              Buscar 🔍︎
+               🔍︎
             </Link>
           </div>
         </div>
@@ -237,7 +237,7 @@ useEffect(() => {
 
       <div className="group fixed bottom-6 right-6 z-50">
         <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
-          Publicar un instrumento en venta
+          
         </div>
         <button
           onClick={() => {
