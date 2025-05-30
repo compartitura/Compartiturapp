@@ -198,6 +198,36 @@ const grupos = [
     }
   },
   {
+    nombre: 'Productores y Organizadores',
+    tipo: 'produccion',
+    suscripcion: 'registro',
+    descripcion: 'Intercambio de ideas entre quienes gestionan y producen eventos musicales.',
+    imagen: 'https://www.compartitura.org/medias/images/file-0000000006d061f7a1cd44a94cff4bce-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-fa26ad54-eec0-4251-b7d8-ac6f9fcb762d.png?fx=c_120_120',
+    enlaces: {
+      whatsapp: '#',
+      partituras: '#',
+      tienda: '#',
+      profesionales: '#',
+      empleo: '#',
+      premium: '#',
+    }
+  },
+  {
+    nombre: 'Técnicos, luthiers y afinadores',
+    tipo: 'Reparacion',
+    suscripcion: 'registro',
+    descripcion: 'Destinado a técnicos de sonido, constructores y afinadores de instrumentos.',
+    imagen: 'https://www.compartitura.org/medias/images/file-00000000934461f7998a0858b752fae5-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-314b101f-6e22-49e2-858c-8d59ce1d71f6.png?fx=c_120_120',
+    enlaces: {
+      whatsapp: '#',
+      partituras: '#',
+      tienda: '#',
+      profesionales: '#',
+      empleo: '#',
+      premium: '#',
+    }
+  },
+  {
     nombre: 'Ofertas de empleo',
     tipo: 'empleo',
     suscripcion: 'registro',
@@ -233,21 +263,6 @@ const grupos = [
     suscripcion: 'registro',
     descripcion: 'Grupo para vender o conseguir partituras y arreglos de autoría propia.',
     imagen: '/grupos/compra-venta-partituras.png',
-    enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
-      profesionales: '#',
-      empleo: '#',
-      premium: '#',
-    }
-  },
-  {
-    nombre: 'Productores y Organizadores',
-    tipo: 'produccion',
-    suscripcion: 'registro',
-    descripcion: 'Intercambio de ideas entre quienes gestionan y producen eventos musicales.',
-    imagen: '/grupos/productores.png',
     enlaces: {
       whatsapp: '#',
       partituras: '#',
@@ -621,10 +636,10 @@ const grupos = [
 
 export default function GruposComunidad() {
   const [activo, setActivo] = useState(null);
-  const [filtro, setFiltro] = useState('registro');
+  const [filtro, setFiltro] = useState('todos');
 
   const filtrados = grupos.filter(g =>
-    filtro === 'registro' ? true : g.suscripcion === filtro
+    filtro === 'todos' ? true : g.suscripcion === filtro
   );
 
   return (
@@ -633,9 +648,10 @@ export default function GruposComunidad() {
         <h1 className="text-1xl font-semibold mb-2">Grupos de la comunidad de Compartitura</h1>
 
         <div className="flex gap-2 mb-6">
-          <button className={`px-3 py-1 rounded ${filtro==='registro'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('registro')}> Registrados 🆓</button>
-          <button className={`px-3 py-1 rounded ${filtro==='musico'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('musico')}> Músicos 🎖</button>
-          <button className={`px-3 py-1 rounded ${filtro==='director'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('director')}> Directores 🎖</button>
+          <button className={`px-3 py-1 rounded ${filtro==='todos'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('todos')}>Todos</button>
+          <button className={`px-3 py-1 rounded ${filtro==='registro'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('registro')}>Registrados</button>
+          <button className={`px-3 py-1 rounded ${filtro==='musico'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('musico')}>Músicos 🎖 </button>
+          <button className={`px-3 py-1 rounded ${filtro==='director'?'bg-black text-white':'bg-gray-200'}`} onClick={() => setFiltro('director')}>Directores 🎖 </button>
         </div>
 
         <div className="flex flex-col gap-4">
