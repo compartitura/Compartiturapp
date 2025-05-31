@@ -16,6 +16,12 @@ export default function Header() {
     }
   }, []);
 
+  const cerrarSesion = () => {
+    localStorage.removeItem('usuario-logueado');
+    localStorage.removeItem('logueado');
+    window.location.href = '/';
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow">
       <div className="px-6 py-2 flex items-center justify-between border-b">
@@ -39,13 +45,16 @@ export default function Header() {
           </Link>
 
           {logueado ? (
-            <Link href="/cuenta" title="Mi cuenta">
-              {avatar ? (
-                <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover border" />
-              ) : (
-                <span className="text-sm">👤</span>
-              )}
-            </Link>
+            <>
+              <Link href="/cuenta" title="Mi cuenta">
+                {avatar ? (
+                  <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover border" />
+                ) : (
+                  <span className="text-sm">👤</span>
+                )}
+              </Link>
+              <button onClick={cerrarSesion} className="text-sm text-red-600 hover:underline">Cerrar sesión</button>
+            </>
           ) : (
             <Link href="/login" className="text-sm text-gray-700 hover:underline">Iniciar sesión</Link>
           )}
