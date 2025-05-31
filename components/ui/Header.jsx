@@ -54,3 +54,105 @@ export default function Header() {
     </header>
   );
 }
+      {menuOpen && (
+        <div id="side-menu" className="fixed top-0 left-0 w-4/5 h-screen bg-white shadow-xl z-50 overflow-y-auto p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">Categorías</h2>
+            <button onClick={() => setMenuOpen(false)} className="text-gray-500 hover:text-black text-2xl">&times;</button>
+          </div>
+
+          <div className="mb-6">
+            <Link
+              href="/usados"
+              onClick={() => setMenuOpen(false)}
+              className="block text-base font-bold bg-gray-200 text-black px-2 py-1 rounded hover:bg-gray-300"
+            >
+              Instrumentos Usados
+            </Link>
+          </div>
+
+          {Object.entries(categoryTree).map(([cat, subs]) => (
+            <div key={cat} className="mb-3">
+              <button
+                onClick={() => toggle(cat)}
+                className="w-full text-left text-sm font-semibold text-gray-800 hover:underline"
+              >
+                {expanded[cat] ? '▼' : '▶'} {translateCategory(cat)}
+              </button>
+              {expanded[cat] && (
+                <div className="ml-4 mt-1 flex flex-col gap-1">
+                  {Object.entries(subs).map(([sub, subsubs]) =>
+                    subsubs.length > 0 ? (
+                      <div key={sub}>
+                        <button
+                          onClick={() => toggle(`${cat}>${sub}`)}
+                          className="text-sm text-gray-700 hover:underline"
+                        >
+                          {expanded[`${cat}>${sub}`] ? '▼' : '▶'} {translateCategory(sub)}
+                        </button>
+                        {expanded[`${cat}>${sub}`] && (
+                          <div className="ml-4 mt-1 flex flex-col gap-1">
+                            {subsubs.map(subsub => (
+                              <Link
+                                key={subsub}
+                                href={`/categories/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}/${encodeURIComponent(subsub)}`}
+                                className="text-sm text-gray-600 hover:text-black"
+                                onClick={() => setMenuOpen(false)}
+                              >
+                                {translateCategory(subsub)}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link
+                        key={sub}
+                        href={`/categories/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}`}
+                        className="text-sm text-gray-700 hover:text-black ml-1"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {translateCategory(sub)}
+                      </Link>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-2 right-3 text-gray-500 text-2xl leading-none"
+            >
+              &times;
+            </button>
+            <h2 className="text-lg font-semibold mb-4">Publicar instrumento usado</h2>
+            <p className="text-sm text-gray-600">Aquí irá el formulario para ingresar los datos del instrumento.</p>
+          </div>
+        </div>
+      )}
+
+      <div className="group fixed bottom-6 right-6 z-50">
+        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
+          
+        </div>
+        <button
+          onClick={() => {
+            if (session) setShowForm(true);
+            else signIn('google', { callbackUrl: window.location.href + '#abrirform' });
+          }}
+          className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
+          aria-label="Publicar"
+        >
+          +
+        </button>
+      </div>
+    </>
+  );
+}
