@@ -3,7 +3,6 @@
     ⚠ Estás en el entorno de pruebas (staging)
   </div>
 )}
-import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,7 +16,6 @@ export default function Header() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const lastScrollY = useRef(0);
-  const { data: session } = useSession();
 
   const calcularTotalDeseos = () => {
     let total = 0;
@@ -87,11 +85,12 @@ export default function Header() {
   }, [menuOpen]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.hash === '#abrirform' && session) {
-      setShowForm(true);
-      window.location.hash = '';
-    }
-  }, [session]);
+  if (typeof window !== 'undefined' && window.location.hash === '#abrirform') {
+    setShowForm(true);
+    window.location.hash = '';
+  }
+}, []);
+
 useEffect(() => {
   const updateCount = () => {
     const total = calcularTotalDeseos();
@@ -240,21 +239,18 @@ useEffect(() => {
         </div>
       )}
 
-      <div className="group fixed bottom-6 right-6 z-50">
-        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
-          
-        </div>
-        <button
-          onClick={() => {
-            if (session) setShowForm(true);
-            else signIn('google', { callbackUrl: window.location.href + '#abrirform' });
-          }}
-          className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
-          aria-label="Publicar"
-        >
-          +
-        </button>
-      </div>
+     <div className="group fixed bottom-6 right-6 z-50">
+  <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
+    Publicar instrumento
+  </div>
+  <button
+    onClick={() => setShowForm(true)}
+    className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
+    aria-label="Publicar"
+  >
+    +
+  </button>
+</div>
     </>
   );
 }
