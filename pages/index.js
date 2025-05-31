@@ -9,12 +9,12 @@ const grupos = [
     descripcion: 'Grupo para directores musicales de cualquier nivel y especialidad.',
     imagen: 'https://www.compartitura.org/medias/images/file-000000006eb461f78bb239edf0db393c-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-140053b9-1f47-4562-86a3-f1948aff683d.png?fx=c_120_120',
     enlaces: {
-      whatsapp: '#',
-      partituras: '#',
-      tienda: '#',
+      whatsapp: 'https://chat.whatsapp.com/Lgpod68aDdfFxMaop6kHjw',
+      partituras: 'https://compartitura.synology.me:5001/d/f/nwgURWWvnoQsvHDtKKYrssnnieKYJph2',
+      tienda: 'http://localhost:3000/categories/Accessories/Music%20Batons%20and%20Accessories',
       profesionales: '#',
       empleo: '#',
-      premium: '#',
+      premium: 'https://form.jotform.com/COMPARTITURA/formulario-de-acceso-al-servidor',
     }
   },
   {
@@ -26,10 +26,10 @@ const grupos = [
     enlaces: {
       whatsapp: '#',
       partituras: '#',
-      tienda: '#',
+      tienda: 'http://localhost:3000/categories/Accessories/Music%20Batons%20and%20Accessories',
       profesionales: '#',
       empleo: '#',
-      premium: '#',
+      premium: 'https://form.jotform.com/COMPARTITURA/formulario-de-acceso-al-servidor',
     }
   },
   {
@@ -44,7 +44,7 @@ const grupos = [
       tienda: '#',
       profesionales: '#',
       empleo: '#',
-      premium: '#',
+      premium: 'https://form.jotform.com/COMPARTITURA/formulario-de-acceso-al-servidor',
     }
   },
   {
@@ -59,7 +59,7 @@ const grupos = [
       tienda: '#',
       profesionales: '#',
       empleo: '#',
-      premium: '#',
+      premium: 'https://form.jotform.com/COMPARTITURA/formulario-de-acceso-al-servidor',
     }
   },
   {
@@ -204,12 +204,12 @@ const grupos = [
     descripcion: 'Destinado a técnicos de sonido, constructores y afinadores de instrumentos.',
     imagen: 'https://www.compartitura.org/medias/images/file-00000000934461f7998a0858b752fae5-conversation-id-67f8217f-8cb0-8012-9be8-6a7105cfb041-message-id-314b101f-6e22-49e2-858c-8d59ce1d71f6.png?fx=c_120_120',
     enlaces: {
-      whatsapp: '#',
+      whatsapp: 'https://chat.whatsapp.com/BK6HNaJ7D6H6IuXqS5P1TG',
       partituras: '#',
-      tienda: '#',
+      tienda: 'http://localhost:3000/categories/Accessories/Multitools',
       profesionales: '#',
       empleo: '#',
-      premium: '#',
+      premium: 'https://form.jotform.com/COMPARTITURA/formulario-de-acceso-al-servidor',
     }
   },
   {
