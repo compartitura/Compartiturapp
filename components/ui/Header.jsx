@@ -1,3 +1,8 @@
+{process.env.NEXT_PUBLIC_ENTORNO === 'staging' && (
+  <div className="bg-yellow-400 text-black text-center text-sm py-1 font-semibold">
+    ⚠ Estás en el entorno de pruebas (staging)
+  </div>
+)}
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
