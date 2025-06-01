@@ -3,9 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Header() {
+export default function Header({ categoryTree = {}, translateCategory = (cat) => cat }) {
   const [logueado, setLogueado] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
     const datos = localStorage.getItem('usuario-logueado');
@@ -22,47 +25,50 @@ export default function Header() {
     window.location.href = '/';
   };
 
+  const toggle = (key) => {
+    setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow">
-      <div className="px-6 py-2 flex items-center justify-between border-b">
-        <Link href="/">
-          <Image
-            src="https://www.compartitura.org/medias/images/captura3.5dc51b958b6c69.11833439-0x80-1-.png"
-            alt="Logo"
-            width={40}
-            height={40}
-            className="object-contain"
-          />
-        </Link>
-
-        <div className="text-1xl font-semibold">Compartitura.org</div>
-
-        <div className="flex items-center gap-4">
-          <Link href="/favorites" title="Favoritos">
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1 5h13M10 21h.01M16 21h.01" />
-            </svg>
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow">
+        <div className="px-6 py-2 flex items-center justify-between border-b">
+          <Link href="/">
+            <Image
+              src="https://www.compartitura.org/medias/images/captura3.5dc51b958b6c69.11833439-0x80-1-.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
           </Link>
 
-          {logueado ? (
-            <>
-              <Link href="/cuenta" title="Mi cuenta">
-                {avatar ? (
-                  <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover border" />
-                ) : (
-                  <span className="text-sm">👤</span>
-                )}
-              </Link>
-              <button onClick={cerrarSesion} className="text-sm text-red-600 hover:underline">Cerrar sesión</button>
-            </>
-          ) : (
-            <Link href="/login" className="text-sm text-gray-700 hover:underline">Iniciar sesión</Link>
-          )}
+          <div className="text-1xl font-semibold">Compartitura.org</div>
+
+          <div className="flex items-center gap-4">
+            <Link href="/favorites" title="Favoritos">
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1 5h13M10 21h.01M16 21h.01" />
+              </svg>
+            </Link>
+
+            {logueado ? (
+              <div className="flex items-center gap-2">
+                <Link href="/cuenta" title="Mi cuenta">
+                  {avatar ? (
+                    <img src={avatar} alt="Avatar" className="w-8 h-8 rounded-full object-cover border" />
+                  ) : (
+                    <span className="text-sm">👤</span>
+                  )}
+                </Link>
+                <button onClick={cerrarSesion} className="text-sm text-red-600 hover:underline">Cerrar sesión</button>
+              </div>
+            ) : (
+              <Link href="/login" className="text-sm text-gray-700 hover:underline">Iniciar sesión</Link>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
-  );
-}
+      </header>
 
       {menuOpen && (
         <div id="side-menu" className="fixed top-0 left-0 w-4/5 h-screen bg-white shadow-xl z-50 overflow-y-auto p-6">
@@ -148,18 +154,20 @@ export default function Header() {
         </div>
       )}
 
-     <div className="group fixed bottom-6 right-6 z-50">
-  <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
-    Publicar instrumento
-  </div>
-  <button
-    onClick={() => setShowForm(true)}
-    className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
-    aria-label="Publicar"
-  >
-    +
-  </button>
-</div>
+      {logueado && (
+        <div className="group fixed bottom-6 right-6 z-50">
+          <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
+            Publicar instrumento
+          </div>
+          <button
+            onClick={() => window.location.href = '/publicar'}
+            className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
+            aria-label="Publicar"
+          >
+            +
+          </button>
+        </div>
+      )}
     </>
   );
 }

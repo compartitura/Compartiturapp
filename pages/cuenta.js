@@ -1,154 +1,95 @@
 // pages/cuenta.js
-import { useEffect, useState } from 'react';
+import fs from 'fs';
+import path from 'path';
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 
-export default function CuentaPage() {
-  const [perfil, setPerfil] = useState(null);
+export async function getServerSideProps() {
+  const filePath = path.join(process.cwd(), 'data', 'usuarios.json');
+  const contenido = fs.readFileSync(filePath, 'utf8');
+  const usuarios = JSON.parse(contenido);
+
+  return { props: { usuarios } };
+}
+
+export default function Cuenta({ usuarios }) {
+  const { data: session } = useSession();
+  const user = session ? usuarios.find(u => u.email === session.user.email) : null;
   const [editando, setEditando] = useState(false);
-  const [quiereSuscribirse, setQuiereSuscribirse] = useState(false);
+  const [form, setForm] = useState({ ...user });
 
-  const precios = {
-    musico: { mensual: 2.5, anual: 14.8 },
-    director: { mensual: 4, anual: 24.8 },
+  const actualizar = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const actualizarCheck = (e) => setForm({ ...form, [e.target.name]: e.target.checked });
+
+  const guardar = async (e) => {
+    e.preventDefault();
+    const res = await fetch('/api/editar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    });
+    if (res.ok) setEditando(false);
+    else alert('Error al guardar');
   };
 
-  useEffect(() => {
-    const datos = localStorage.getItem('usuario-logueado');
-    if (datos) setPerfil(JSON.parse(datos));
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'avatar' && files.length > 0) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPerfil(prev => ({ ...prev, avatar: reader.result }));
-      };
-      reader.readAsDataURL(files[0]);
-    } else {
-      setPerfil(prev => ({ ...prev, [name]: value }));
-    }
-  };
-
-  const guardarCambios = () => {
-    localStorage.setItem('usuario-logueado', JSON.stringify(perfil));
-    alert('Cambios guardados');
-    setEditando(false);
-  };
-
-  const calcularPrecio = () => {
-    if (!perfil?.modo || !perfil?.suscripcion) return null;
-    const base = precios[perfil.modo][perfil.suscripcion];
-    const iva = base * 0.21;
-    return (base + iva).toFixed(2);
-  };
-
-  const activarSuscripcion = () => {
-    const fecha = new Date();
-    const renovacion = new Date();
-    renovacion.setMonth(renovacion.getMonth() + (perfil.suscripcion === 'mensual' ? 1 : 12));
-    const actualizado = { ...perfil, activa: true, fechaRenovacion: renovacion.toISOString().split('T')[0] };
-    localStorage.setItem('usuario-logueado', JSON.stringify(actualizado));
-    setPerfil(actualizado);
-    alert('Suscripción activada. ¡Gracias!');
-  };
-
-  const cancelarSuscripcion = () => {
-    const actualizado = { ...perfil, activa: false, fechaRenovacion: null };
-    localStorage.setItem('usuario-logueado', JSON.stringify(actualizado));
-    setPerfil(actualizado);
-    alert('Suscripción cancelada.');
-  };
-
-  if (!perfil) return <p className="mt-28 text-center">Cargando datos...</p>;
+  if (!user) return <p className="mt-24 text-center">No has iniciado sesión</p>;
 
   return (
-    <main className="mt-28 max-w-xl mx-auto p-6 bg-white shadow rounded space-y-4">
-      <h2 className="text-xl font-bold">Mi cuenta</h2>
+    <main className="max-w-xl mx-auto mt-24 p-6 bg-white shadow rounded">
+      <h1 className="text-xl font-bold mb-4">Mi cuenta</h1>
 
-      {perfil.avatar && (
-        <div className="text-center">
-          <img src={perfil.avatar} alt="Avatar" className="w-24 h-24 rounded-full mx-auto object-cover border" />
-        </div>
-      )}
-
-      {editando ? (
-        <>
-          <input name="nombre" value={perfil.nombre} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <input name="email" value={perfil.email} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <input name="telefono" value={perfil.telefono} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <input name="ciudad" value={perfil.ciudad} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <input name="pais" value={perfil.pais} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <input name="instrumentos" value={perfil.instrumentos} onChange={handleChange} className="w-full border px-3 py-2 rounded" />
-          <select name="nivel" value={perfil.nivel} onChange={handleChange} className="w-full border px-3 py-2 rounded">
-            <option value="aficionado">Aficionado</option>
-            <option value="intermedio">Intermedio</option>
-            <option value="profesional">Profesional</option>
-            <option value="titulado">Titulado</option>
-          </select>
-
-          <div>
-            <label className="block text-sm mb-1">Cambiar imagen de perfil</label>
-            <input type="file" accept="image/*" name="avatar" onChange={handleChange} className="w-full" />
-          </div>
-
-          <button onClick={guardarCambios} className="w-full bg-green-600 text-white py-2 rounded">Guardar</button>
-        </>
-      ) : (
-        <>
-          <p><strong>Nombre:</strong> {perfil.nombre}</p>
-          <p><strong>Email:</strong> {perfil.email}</p>
-          <p><strong>Teléfono:</strong> {perfil.telefono}</p>
-          <p><strong>Ciudad:</strong> {perfil.ciudad}</p>
-          <p><strong>País:</strong> {perfil.pais}</p>
-          <p><strong>Instrumentos:</strong> {perfil.instrumentos}</p>
-          <p><strong>Nivel:</strong> {perfil.nivel}</p>
-
-          <button onClick={() => setEditando(true)} className="w-full bg-blue-600 text-white py-2 rounded">Editar</button>
-        </>
-      )}
-
-      {perfil.activa ? (
-        <div className="border-t pt-4 space-y-2">
-          <h3 className="text-lg font-semibold mb-2">Tu suscripción</h3>
-          <p><strong>Modalidad:</strong> {perfil.modo}</p>
-          <p><strong>Plan:</strong> {perfil.suscripcion}</p>
-          <p><strong>Renovación:</strong> {perfil.fechaRenovacion}</p>
-
-          <button onClick={() => setPerfil(prev => ({ ...prev, activa: false }))} className="w-full bg-yellow-500 text-black py-2 rounded">Modificar</button>
-          <button onClick={cancelarSuscripcion} className="w-full bg-red-600 text-white py-2 rounded">Cancelar suscripción</button>
+      {!editando ? (
+        <div className="space-y-2">
+          <p><strong>Nombre:</strong> {user.nombre}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Ciudad:</strong> {user.ciudad}</p>
+          <p><strong>País:</strong> {user.pais}</p>
+          <p><strong>Teléfono:</strong> {user.telefono}</p>
+          <p><strong>Instrumento:</strong> {user.instrumento}</p>
+          <p><strong>Nivel:</strong> {user.nivel}</p>
+          <p><strong>Visibilidad:</strong> {user.visible ? 'Sí' : 'No'}</p>
+          <p><strong>Suscripción:</strong> {user.premium ? `${user.premium.tipo} - ${user.premium.tiempo}` : 'No'}</p>
+          <button onClick={() => setEditando(true)} className="bg-black text-white px-4 py-2 rounded">Editar</button>
         </div>
       ) : (
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold mb-2">Suscripción</h3>
+        <form onSubmit={guardar} className="space-y-3">
+          <input type="text" name="nombre" value={form.nombre} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
+          <input type="text" name="ciudad" value={form.ciudad} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
+          <input type="text" name="pais" value={form.pais} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
+          <input type="text" name="telefono" value={form.telefono} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
+          <input type="text" name="instrumento" value={form.instrumento || ''} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
+          <input type="text" name="nivel" value={form.nivel || ''} onChange={actualizar} className="w-full border px-3 py-2 rounded" />
 
-          <label className="flex items-center gap-2">
-            <input type="radio" name="modo" value="musico" checked={perfil.modo === 'musico'} onChange={handleChange} />
-            Músico
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="radio" name="modo" value="director" checked={perfil.modo === 'director'} onChange={handleChange} />
-            Director
-          </label>
-
-          <label className="flex items-center gap-2 mt-2">
-            <input type="radio" name="suscripcion" value="mensual" checked={perfil.suscripcion === 'mensual'} onChange={handleChange} />
-            Mensual
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="radio" name="suscripcion" value="anual" checked={perfil.suscripcion === 'anual'} onChange={handleChange} />
-            Anual
+          <label className="block text-sm">
+            <input type="checkbox" name="visible" checked={form.visible} onChange={actualizarCheck} className="mr-2" />
+            Mostrarme en las búsquedas públicas
           </label>
 
-          {perfil.modo && perfil.suscripcion && (
-            <p className="text-sm text-gray-600 mt-2">
-              Precio con IVA: <strong>{calcularPrecio()} €</strong>
-            </p>
+          <label className="block text-sm">
+            <input type="checkbox" name="premiumActiva" checked={!!form.premium} onChange={e => setForm({ ...form, premium: e.target.checked ? { tipo: '', tiempo: '' } : null })} className="mr-2" />
+            Suscripción premium
+          </label>
+
+          {form.premium && (
+            <div className="space-y-2">
+              <select name="tipo" value={form.premium.tipo} onChange={e => setForm({ ...form, premium: { ...form.premium, tipo: e.target.value } })} className="w-full border px-3 py-2 rounded">
+                <option value="">Tipo</option>
+                <option value="Músico">Músico - 2,50€/mes o 14,80€/año</option>
+                <option value="Director">Director - 4,00€/mes o 24,80€/año</option>
+              </select>
+              <select name="tiempo" value={form.premium.tiempo} onChange={e => setForm({ ...form, premium: { ...form.premium, tiempo: e.target.value } })} className="w-full border px-3 py-2 rounded">
+                <option value="">Duración</option>
+                <option value="Mensual">Mensual</option>
+                <option value="Anual">Anual</option>
+              </select>
+            </div>
           )}
 
-          <button onClick={activarSuscripcion} className="mt-4 w-full bg-black text-white py-2 rounded hover:bg-gray-800">
-            Suscribirme
-          </button>
-        </div>
+          <div className="flex gap-4">
+            <button type="submit" className="bg-black text-white px-4 py-2 rounded">Guardar</button>
+            <button type="button" onClick={() => setEditando(false)} className="bg-gray-200 px-4 py-2 rounded">Cancelar</button>
+          </div>
+        </form>
       )}
     </main>
   );
