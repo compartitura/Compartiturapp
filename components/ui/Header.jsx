@@ -63,6 +63,7 @@ export default function Header() {
     </header>
   );
 }
+
       {menuOpen && (
         <div id="side-menu" className="fixed top-0 left-0 w-4/5 h-screen bg-white shadow-xl z-50 overflow-y-auto p-6">
           <div className="flex justify-between items-center mb-4">
@@ -147,21 +148,18 @@ export default function Header() {
         </div>
       )}
 
-      <div className="group fixed bottom-6 right-6 z-50">
-        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
-          
-        </div>
-        <button
-          onClick={() => {
-            if (session) setShowForm(true);
-            else signIn('google', { callbackUrl: window.location.href + '#abrirform' });
-          }}
-          className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
-          aria-label="Publicar"
-        >
-          +
-        </button>
-      </div>
+     <div className="group fixed bottom-6 right-6 z-50">
+  <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block text-xs bg-black text-white px-3 py-1 rounded shadow">
+    Publicar instrumento
+  </div>
+  <button
+    onClick={() => setShowForm(true)}
+    className="bg-black text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-xl hover:opacity-90"
+    aria-label="Publicar"
+  >
+    +
+  </button>
+</div>
     </>
   );
 }
