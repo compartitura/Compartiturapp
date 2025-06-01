@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/270525', // 👈 esto es lo clave
   images: {
     remotePatterns: [
       {
@@ -15,3 +16,4 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
